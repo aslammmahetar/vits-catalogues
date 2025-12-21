@@ -1,1 +1,2 @@
-# vits-catalogues
+# vits-cat
+Catalogue solution
