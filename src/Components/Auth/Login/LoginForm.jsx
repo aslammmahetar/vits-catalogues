@@ -53,7 +53,7 @@ const LoginForm = ({ handleSubmit, handleChange, loginData, setIsLogin }) => {
             Don’t have an account?{" "}
             <a
               onClick={() => {
-                setIsLogin(false);
+                // setIsLogin(false);
                 router.push("auth?register=1");
               }}
               href="#"

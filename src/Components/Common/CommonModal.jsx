@@ -10,10 +10,10 @@ export default function CommonModal({
   message = "Are you sure, want to proceed further?",
   onConfirm,
 }) {
-  const [isBrowser, setIsBrowser] = useState(false);
+  const isBrowser = typeof window !== "undefined";
 
   useEffect(() => {
-    setIsBrowser(true);
+    // setIsBrowser(true);
     const handleEsc = (e) => {
       if (e.key === "Escape") onClose();
     };

@@ -18,7 +18,7 @@ export default function AuthPage() {
   const signup = useAuthStore((store) => store.signup);
   const router = useRouter();
   const [loginData, setLoginData] = useState({ mobileNo: "", password: "" });
-  const [isLogin, setIsLogin] = useState(true);
+  const isLogin = searchParams.get("register") !== "1";
   const [latlng, setLatLng] = useState("");
   const [registerData, setRegisterData] = useState({
     name: "",
@@ -39,16 +39,24 @@ export default function AuthPage() {
     getGeoLocation()
       .then((loc) => setLatLng((prev) => (prev = `${loc.lat}, ${loc.lng}`)))
       .catch(console.error);
-    if (searchParams.get("register") === "1") {
-      setIsLogin(false);
-    }
   }, []);
 
-  useEffect(() => {
-    if (latlng) {
-      setRegisterData((prev) => ({ ...prev, latlng }));
-    }
-  }, [latlng]);
+  // useEffect(() => {
+  //   const shouldLogin = searchParams.get("register") !== "1";
+
+  //   setIsLogin((prev) => {
+  //     if (prev === shouldLogin) return prev;
+  //     return shouldLogin;
+  //   });
+  // }, [searchParams]);
+
+  // useEffect(() => {
+  //   if (!latlng) return;
+
+  //   setRegisterData((prev) =>
+  //     prev.latlng === latlng ? prev : { ...prev, latlng }
+  //   );
+  // }, [latlng]);
 
   const handleLoginChange = (e) =>
     setLoginData({ ...loginData, [e.target.name]: e.target.value });
@@ -58,8 +66,11 @@ export default function AuthPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const reqBody = isLogin ? loginData : registerData;
+    const submitregisterData = {
+      ...registerData,
+      latlng,
+    };
+    const reqBody = isLogin ? loginData : submitregisterData;
     const auth = isLogin ? await signin(reqBody) : await signup(reqBody);
     console.log(auth);
     if (auth.status === "fail" || auth.status === 500) {
@@ -69,7 +80,7 @@ export default function AuthPage() {
 
     if (!isLogin) {
       toast.success(auth.message);
-      setIsLogin(true);
+      // setIsLogin(true);
     } else {
       toast.success(auth.message);
       router.push(`/${auth.user?.slug}/admin`);
@@ -101,14 +112,14 @@ export default function AuthPage() {
           handleChange={handleLoginChange}
           handleSubmit={handleSubmit}
           loginData={loginData}
-          setIsLogin={setIsLogin}
+          // setIsLogin={setIsLogin}
         />
       ) : (
         <RegisterForm
           handleRegisterChange={handleRegisterChange}
           handleSubmit={handleSubmit}
           registerData={registerData}
-          setIsLogin={setIsLogin}
+          // setIsLogin={setIsLogin}
         />
       )}
       <Link href={"/"} className="fixed top-5 left-5">

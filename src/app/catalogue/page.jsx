@@ -18,7 +18,7 @@ function Catalogue() {
               key={p.id}
               className="bg-white p-4 rounded-xl shadow hover:shadow-md"
             >
-              <img
+              <Image
                 src={p.image}
                 alt={p.name}
                 className="w-full h-40 object-cover rounded-md"

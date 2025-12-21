@@ -72,7 +72,7 @@ const QAB = ({ slug }) => {
       ]);
     }
     load();
-  }, []);
+  }, [slug]);
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
       <div className="lg:col-span-2 space-y-4">

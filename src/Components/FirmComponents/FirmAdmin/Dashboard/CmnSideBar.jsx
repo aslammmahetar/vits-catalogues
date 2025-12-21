@@ -1,19 +1,17 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ChevronDown, ChevronRight, LogOut, Menu } from "lucide-react";
 import logo from "../../../../app/logo.png";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation"; // Import usePathname
 import { toast } from "react-hot-toast";
-import { AuthServices } from "@/lib/services/AuthServices";
-import { enAuthReqType } from "@/lib/utils";
 import { useAuthStore } from "@/store/useAuthStore";
 
 const CmnSideBar = ({ navItems }) => {
   const [isCollapsed, setIsCollapsed] = useState(true);
-  const [expandedMenus, setExpandedMenus] = useState({});
+  // const [expandedMenus, setExpandedMenus] = useState({});
   const signOut = useAuthStore((store) => store.signout);
   const pathname = usePathname();
   const router = useRouter();
@@ -35,21 +33,19 @@ const CmnSideBar = ({ navItems }) => {
     return false;
   };
 
-  useEffect(() => {
-    const newExpandedState = {};
+  const expandedMenus = useMemo(() => {
+    const state = {};
 
     navItems.forEach((item) => {
       if (item.submenu) {
-        // Expand menu if current path matches any submenu item
-        newExpandedState[item.title] = item.submenu.some(
+        state[item.title] = item.submenu.some(
           (subItem) => subItem.path === pathname
         );
       }
     });
 
-    setExpandedMenus((prev) => ({ ...prev, ...newExpandedState }));
+    return state;
   }, [pathname, navItems]);
-
   // useEffect(() => {
   //   const handleResize = () => {
   //     if (window.innerWidth < 768) setIsCollapsed(true);

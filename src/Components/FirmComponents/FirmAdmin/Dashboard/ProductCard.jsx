@@ -1,10 +1,12 @@
+import Image from "next/image";
+
 export default function ProductCard({ p }) {
   return (
     <div className="bg-white rounded-xl shadow-sm overflow-hidden flex flex-col">
       <div className="h-40 w-full bg-gray-100 flex items-center justify-center">
         {p.image ? (
           // next/image would be better in production
-          <img
+          <Image
             src={p.image}
             alt={p.name}
             className="h-full w-full object-cover"

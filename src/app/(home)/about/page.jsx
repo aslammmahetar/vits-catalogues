@@ -31,8 +31,8 @@ const AboutPage = () => {
               with Vits
             </h1>
             <p className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              We're on a mission to help every local shop owner create beautiful
-              digital catalogues—
+              We&apos;re on a mission to help every local shop owner create
+              beautiful digital catalogues—
               <span className="font-semibold text-green-700">
                 no tech skills needed
               </span>
@@ -93,10 +93,10 @@ const AboutPage = () => {
             </div>
             <div className="bg-gradient-to-br from-white to-green-50 border border-green-100 rounded-3xl p-8 md:p-12 shadow-xl">
               <p className="text-xl text-gray-700 leading-relaxed text-center">
-                In today's digital world, customers expect to browse products
-                online—even from their neighborhood shops. Yet most local
-                businesses struggle with expensive websites or limited WhatsApp
-                catalogues.{" "}
+                In today&apos;s digital world, customers expect to browse
+                products online—even from their neighborhood shops. Yet most
+                local businesses struggle with expensive websites or limited
+                WhatsApp catalogues.{" "}
                 <span className="font-semibold text-green-800">
                   Vits changes that.
                 </span>
@@ -280,14 +280,15 @@ const AboutPage = () => {
                     <Users size={16} />A Personal Message
                   </div>
                   <h3 className="text-3xl font-bold text-gray-900 mb-6">
-                    "We Built Vits for Shop Owners Like My Father"
+                    &quot;We Built Vits for Shop Owners Like My Father&quot;
                   </h3>
                   <blockquote className="text-gray-700 text-lg leading-relaxed italic border-l-4 border-green-500 pl-6 py-2">
-                    "I watched my father struggle for years with outdated
+                    &quot;I watched my father struggle for years with outdated
                     methods to showcase his products. He wanted something
-                    simple, affordable, and effective. That's why we created
-                    Vits—to give every local business the digital presence they
-                    deserve, without the complexity or high costs."
+                    simple, affordable, and effective. That&apos;s why we
+                    created Vits—to give every local business the digital
+                    presence they deserve, without the complexity or high
+                    costs.&quot;
                   </blockquote>
                   <div className="mt-8 pt-6 border-t border-gray-200">
                     <div className="font-bold text-gray-900">Founder, Vits</div>

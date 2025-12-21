@@ -19,21 +19,28 @@ const CataloguesSections = () => {
   const getCatalogues = useCatalogueStore((store) => store.getCatalogues);
   const loading = useCatalogueStore((store) => store.loading.getCatalogues);
 
-  const getCats = async () => {
-    const cats = await getCatalogues(`owner_id=${owner_id}`);
-    console.log(cats);
-    if (cats.status === "fail") {
-      toast.error(cats.message || "Error Occured!");
-    } else {
-      toast.success(cats.message);
-      setCatalogues(cats.catalogues);
-    }
-  };
   useEffect(() => {
-    if (owner_id) {
-      getCats();
-    }
+    if (!owner_id) return;
+
+    let cancelled = false;
+
+    (async () => {
+      const cats = await getCatalogues(`owner_id=${owner_id}`);
+      if (cancelled) return;
+
+      if (cats.status === "fail") {
+        toast.error(cats.message || "Error Occured!");
+      } else {
+        toast.success(cats.message);
+        setCatalogues(cats.catalogues);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
   }, [owner_id]);
+
   const handleIsEditing = (bool) => {
     setIsEditing(bool);
   };

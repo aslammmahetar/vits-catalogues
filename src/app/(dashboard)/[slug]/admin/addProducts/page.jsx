@@ -1,6 +1,7 @@
 "use client";
 import ProductPage from "@/Components/FirmComponents/FirmAdmin/AddProducts/ProductPage";
 import { cmnAdminBg } from "@/common/commoncss";
+import Image from "next/image";
 import React, { useState } from "react";
 
 const AddProduct = () => {
@@ -11,7 +12,7 @@ const AddProduct = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {products.map((p) => (
           <div key={p.id} className="bg-white p-4 rounded-xl shadow">
-            <img
+            <Image
               src={p.image}
               alt={p.name}
               className="w-full h-40 object-cover rounded-md"

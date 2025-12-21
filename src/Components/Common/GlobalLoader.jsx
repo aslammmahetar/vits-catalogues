@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { useEffect } from "react";
 
 const GlobalLoader = ({ show = false, loadingText = "Please wait..." }) => {
-  if (!show) return null;
+  // if (!show) return null;
   useEffect(() => {
     document.body.style.overflow = show ? "hidden" : "auto";
   }, [show]);

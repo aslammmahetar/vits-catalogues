@@ -231,7 +231,7 @@ const RegisterForm = ({
             Already have an account?{" "}
             <a
               onClick={() => {
-                setIsLogin(true);
+                // setIsLogin(true);
                 router.push("/auth");
               }}
               href="#"
