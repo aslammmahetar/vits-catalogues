@@ -1,3 +1,5 @@
+import { log } from "./log"
+
 export async function validateTenant(slug) {
     log("validateTenant()", slug)
 

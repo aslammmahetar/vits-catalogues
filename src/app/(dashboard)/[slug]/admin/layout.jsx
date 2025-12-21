@@ -19,7 +19,7 @@ import {
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { toast } from "react-hot-toast";
-
+export const dynamic = "force-dynamic";
 const Rootlayout = ({ children }) => {
   const user = useAuthStore((store) => store.user);
   const slug = user?.slug;

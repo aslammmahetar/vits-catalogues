@@ -10,14 +10,19 @@ export async function middleware(req) {
     if (route.type === "PUBLIC" || route.type === "TENANT_PUBLIC") {
         return NextResponse.next();
     }
-
+    log("RESOLVED ROUTE", route)
     return await runGuards(req, route);
 }
 
 export const config = {
     matcher: [
+        "/admin",
         "/admin/:path*",
+
+        "/:slug/admin",
         "/:slug/admin/:path*",
+
+        "/:slug/catalogue",
         "/:slug/catalogue/:path*",
     ],
-};
+}
