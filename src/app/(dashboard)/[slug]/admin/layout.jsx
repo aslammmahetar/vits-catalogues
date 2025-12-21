@@ -89,7 +89,7 @@ const Rootlayout = ({ children }) => {
   ];
   {
     if (globalLoading) {
-      return <GlobalLoader show={globalLoading} loadingText={loadingText} />;
+      // return <GlobalLoader show={globalLoading} loadingText={loadingText} />;
     } else {
       return (
         <div className="flex h-screen overflow-hidden">
@@ -106,7 +106,7 @@ const Rootlayout = ({ children }) => {
             </div>
           </div>
           <BottomBar />
-          <GlobalLoader show={globalLoading} loadingText={loadingText} />
+          {/* <GlobalLoader show={globalLoading} loadingText={loadingText} /> */}
         </div>
       );
     }
