@@ -1,5 +1,5 @@
 /** @type {import('next').NextConfig} */
-import { WithPWA } from 'next-pwa';
+import withPWA from "next-pwa";
 const nextConfig = {
   env: {
     JWT_SECRET: process.env.JWT_SECRET,
@@ -16,9 +16,9 @@ const nextConfig = {
   reactStrictMode: true,
 };
 
-export default WithPWA({
+export default withPWA({
   dest: "public",
   register: true,
   skipWaiting: true,
-  disable: process.env.NODE_ENV === "development"
+  disable: process.env.NODE_ENV === "production"
 })(nextConfig);
