@@ -10,6 +10,7 @@ export const enAuthReqType = {
     resetPassword: 4,
     signout: 5,
     me: 6,
+    bootstrap: 7
 }
 
 export const enProductsReqType = {

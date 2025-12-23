@@ -1,24 +1,27 @@
 import CommonHeading from "@/Components/Common/FirmAdmin/CommonHeading";
-import { ImageMinusIcon } from "lucide-react";
+import { ImageMinusIcon, Trash2 } from "lucide-react";
 import Image from "next/image";
-import React, { useEffect } from "react";
+import React from "react";
 
-const CataPreviewCard = ({ image, cataloagueName }) => {
-  useEffect(() => {
-    console.log(image);
-  }, [image]);
+const CataPreviewCard = ({ image, cataloagueName, handleRemoveImage }) => {
   return (
     <div className="px-4 md:px-10 lg:px-36">
       <CommonHeading
         headingText="Catalogue Preview"
         classNames="text-center mb-8"
       />
-
-      <div className="group max-w-sm mx-auto rounded-2xl border border-gray-200 bg-white shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer">
+      <div className="group max-w-sm mx-auto rounded-2xl border border-gray-200 bg-white shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer relative">
         {/* Image Section */}
         <div className="relative h-48 sm:h-56 bg-gray-50 flex items-center justify-center overflow-hidden">
           {image && image.length > 0 ? (
             <>
+              <button
+                onClick={handleRemoveImage}
+                title="Delete Image"
+                className="absolute top-3 right-3 z-20 p-2 rounded-full hover:bg-red-500 bg-red-600 transition-all text-white cursor-pointer"
+              >
+                <Trash2 className="w-5 h-5" />
+              </button>
               <Image
                 src={image[0].preview}
                 alt="Catalogue"

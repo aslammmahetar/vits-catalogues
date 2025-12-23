@@ -41,23 +41,6 @@ export default function AuthPage() {
       .catch(console.error);
   }, []);
 
-  // useEffect(() => {
-  //   const shouldLogin = searchParams.get("register") !== "1";
-
-  //   setIsLogin((prev) => {
-  //     if (prev === shouldLogin) return prev;
-  //     return shouldLogin;
-  //   });
-  // }, [searchParams]);
-
-  // useEffect(() => {
-  //   if (!latlng) return;
-
-  //   setRegisterData((prev) =>
-  //     prev.latlng === latlng ? prev : { ...prev, latlng }
-  //   );
-  // }, [latlng]);
-
   const handleLoginChange = (e) =>
     setLoginData({ ...loginData, [e.target.name]: e.target.value });
 

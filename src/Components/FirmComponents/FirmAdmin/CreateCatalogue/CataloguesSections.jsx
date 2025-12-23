@@ -14,9 +14,11 @@ import EditCatalogue from "./EditCatalogue";
 const CataloguesSections = () => {
   const user = useAuthStore((store) => store.user);
   const owner_id = user?.id;
-  const [catalogues, setCatalogues] = useState([]);
+  const catalogues = useCatalogueStore((store) => store.catalogues);
   const [isEditing, setIsEditing] = useState(false);
+  const [editCat, setEditCat] = useState(null);
   const getCatalogues = useCatalogueStore((store) => store.getCatalogues);
+  const deleteCatalogue = useCatalogueStore((store) => store.deleteCatalogue);
   const loading = useCatalogueStore((store) => store.loading.getCatalogues);
 
   useEffect(() => {
@@ -32,7 +34,6 @@ const CataloguesSections = () => {
         toast.error(cats.message || "Error Occured!");
       } else {
         toast.success(cats.message);
-        setCatalogues(cats.catalogues);
       }
     })();
 
@@ -41,8 +42,24 @@ const CataloguesSections = () => {
     };
   }, [owner_id]);
 
-  const handleIsEditing = (bool) => {
+  const handleIsEditing = (bool, cat) => {
     setIsEditing(bool);
+    setEditCat(cat);
+  };
+
+  const handleDeleteCatalogue = async (catalogue_id) => {
+    const deleteBody = {
+      owner_id,
+      catalogue_id,
+    };
+    const deleteCat = await deleteCatalogue(deleteBody);
+    if (deleteCat.status === "fail") {
+      toast.error(deleteCat.message);
+      return;
+    } else {
+      toast.success(deleteCat.message);
+      getCatalogues(`owner_id=${owner_id}`);
+    }
   };
   return (
     <div className={`${cmnCard} p-5 sm:p-6`}>
@@ -60,6 +77,7 @@ const CataloguesSections = () => {
               key={catalogue.catalogue_id}
               catalogeDetails={catalogue}
               handleIsEditing={handleIsEditing}
+              handleDeleteCatalogue={handleDeleteCatalogue}
             />
           ))}
         </div>
@@ -69,10 +87,13 @@ const CataloguesSections = () => {
       {isEditing && (
         <CommonDialogue
           isOpen={isEditing}
-          onClose={() => handleIsEditing(false)}
+          onClose={() => handleIsEditing(false, null)}
           headingText={"Edit Catalogue Details"}
         >
-          <EditCatalogue />
+          <EditCatalogue
+            existing_cat={editCat}
+            handleIsEditing={handleIsEditing}
+          />
         </CommonDialogue>
       )}
     </div>

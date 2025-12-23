@@ -1,13 +1,24 @@
 import CommonImageInput from "@/Components/Common/CommonImageInput";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ImageMinusIcon, Save } from "lucide-react";
 import Image from "next/image";
 import { cmnRegInput, cmnlabel } from "@/common/commoncss";
 import PositivetButton from "@/Components/Common/Buttons/PositivetButton";
 import NegativeButton from "@/Components/Common/Buttons/NegativeButton";
+import { useAuthStore } from "@/store/useAuthStore";
+import { useCatalogueStore } from "@/store/useCatalogueStore";
+import { toast } from "react-hot-toast";
 
-const EditCatalogue = () => {
-  const [image, setImage] = useState([]);
+const EditCatalogue = ({ existing_cat, handleIsEditing }) => {
+  const user = useAuthStore((store) => store.user);
+  const owner_id = user?.id;
+  const [image, setImage] = useState(existing_cat?.catalogue_image);
+  const [catalogue_name, setCatalogue_name] = useState(
+    existing_cat?.catalogue_name
+  );
+  const editCatalogue = useCatalogueStore((store) => store.editCatalogue);
+  const getCatalogues = useCatalogueStore((store) => store.getCatalogues);
+  const loading = useCatalogueStore((store) => store.loading.editCatalogue);
   const handleSingleFileSelect = (e) => {
     const files = Array.from(e.target.files);
     console.log(files);
@@ -27,6 +38,29 @@ const EditCatalogue = () => {
 
     e.target.value = "";
   };
+  const handleUpdate = async () => {
+    const formData = new FormData();
+    formData.append(
+      "data",
+      JSON.stringify({
+        catalogue_name: catalogue_name,
+        catalogue_id: existing_cat?.catalogue_id,
+        owner_id: owner_id,
+      })
+    );
+    if (Array.isArray(image)) {
+      image.forEach((img) => formData.append("images", img.file));
+    }
+    const res = await editCatalogue(formData);
+    console.log("Front", res);
+    if (res.status === "fail") {
+      toast.error(res.message || "Error Occured");
+    } else {
+      toast.success(res.message);
+      handleIsEditing(false, null);
+      getCatalogues(`owner_id=${owner_id}`);
+    }
+  };
   return (
     <div>
       <CommonImageInput
@@ -40,7 +74,7 @@ const EditCatalogue = () => {
           {image && image.length > 0 ? (
             <>
               <Image
-                src={image[0].preview}
+                src={Array.isArray(image) ? image[0].preview : image}
                 alt="Catalogue"
                 fill
                 className="object-contain transition-transform duration-500 group-hover:scale-105"
@@ -61,20 +95,22 @@ const EditCatalogue = () => {
           type="text"
           name="name"
           placeholder="Enter Catalogue Name"
-          // value={productDetails.name}
-          // onChange={(e) => handleInputChange(e)}
+          value={catalogue_name}
+          onChange={(e) => setCatalogue_name(e.target.value)}
           className={cmnRegInput}
         />
       </div>
       <div className="flex flex-col sm:flex-row gap-3 justify-center mt-5">
-        <NegativeButton text="Cancel" />
+        <NegativeButton
+          text="Cancel"
+          onClick={() => handleIsEditing(false, null)}
+        />
         <PositivetButton
           className={"text-center flex items-center gap-1"}
           icon={<Save />}
-          text={`Save Changes`}
-          //   text={loading ? "Creating..." : "Create Catalogue"}
-          //   onClick={handleCreate}
-          //   disabled={loading}
+          text={loading ? "Saving..." : "Save Changes"}
+          onClick={handleUpdate}
+          disabled={loading}
         />
       </div>
     </div>

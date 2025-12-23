@@ -1,40 +1,10 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import Stats from "./Stats";
 import QAB from "./QAB";
-import { useUsersStatsStore } from "@/store/useUserStatsStore";
-import { toast } from "react-hot-toast";
-import { useAuthStore } from "@/store/useAuthStore";
 
 const MainAdmin = ({ slug }) => {
-  const user = useAuthStore((store) => store.user);
-  const id = user?.id;
-  const hasFetched = useRef(false);
-  const getUserStats = useUsersStatsStore((store) => store.getUserStats);
-  const getUserLatestStats = async () => {
-    const toastId = toast.loading("Getting latest stats, please wait...");
-    try {
-      const res = await getUserStats(id);
-      console.log(res);
-      toast.dismiss(toastId);
-      if (res.status === "fail" || res.status === "error") {
-        toast.error(res.message);
-      } else {
-        toast.success(res.message);
-      }
-    } catch (err) {
-      toast.dismiss(toastId);
-      console.log(err);
-      toast.error("Failed to fetch latest stats");
-    }
-  };
-
-  useEffect(() => {
-    if (!id || hasFetched.current) return;
-    hasFetched.current = true;
-    getUserLatestStats();
-  }, [id]);
   return (
     <div className="min-h-screen">
       <div className="flex">

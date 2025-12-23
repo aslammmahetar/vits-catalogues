@@ -14,7 +14,15 @@ export const CatalogueServices = async (reqType, params, reqBody, authData) => {
             const getCatalogues = await axios.get(`${mainRoute}getCatalogues?${params}`)
             return getCatalogues.data;
         }
+        else if (reqType === enCatalogueReqTyoe.editCatalogue) {
+            const editCatalogue = await axios.post(`${mainRoute}editCatalogue`, reqBody, formDataHeaderConfig)
+            return editCatalogue.data;
+        } else if (reqType === enCatalogueReqTyoe.deleteCatalogue) {
+            const deleteCatalogue = await axios.post(`${mainRoute}deleteCatalogue`, reqBody)
+            return deleteCatalogue.data;
+        }
     } catch (error) {
-        return error
+        console.log(error)
+        return error?.response?.data || error;
     }
 }

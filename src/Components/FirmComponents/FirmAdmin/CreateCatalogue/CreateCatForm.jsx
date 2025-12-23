@@ -10,6 +10,7 @@ const CreateCatForm = ({
   handleChange,
   loading,
   handleCreate,
+  handleCancelClick,
 }) => {
   return (
     <div>
@@ -37,13 +38,13 @@ const CreateCatForm = ({
         </span>
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-3 justify-end">
+          <NegativeButton text="Cancel" onClick={handleCancelClick} />
           <PositivetButton
             className={"text-center"}
             text={loading ? "Creating..." : "Create Catalogue"}
             onClick={handleCreate}
             disabled={loading}
           />
-          <NegativeButton text="Cancel" />
         </div>
       </div>
     </div>

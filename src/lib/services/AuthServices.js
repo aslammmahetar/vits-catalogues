@@ -17,6 +17,9 @@ export async function AuthServices(reqType, params, reqBody, authData) {
         } else if (reqType === enAuthReqType.me) {
             const me = await axios.get(`${mainRoute}/me?${params}`)
             return me.data;
+        } else if (reqType = enAuthReqType.bootstrap) {
+            const bootstrap = await axios.get(`${mainRoute}/bootstrap?slug=${params}`, { withCredentials: true })
+            return bootstrap.data;
         }
     } catch (error) {
         console.log(error)

@@ -1,6 +1,7 @@
 "use client";
 
 import CommonHeading from "@/Components/Common/FirmAdmin/CommonHeading";
+import { useCatalogueStore } from "@/store/useCatalogueStore";
 import {
   Download,
   Eye,
@@ -14,7 +15,16 @@ import {
 import Image from "next/image";
 import React from "react";
 
-const CatalogueCard = ({ catalogeDetails, handleIsEditing }) => {
+const CatalogueCard = ({
+  catalogeDetails,
+  handleIsEditing,
+  handleDeleteCatalogue,
+}) => {
+  const loading = useCatalogueStore((store) => store.loading.deleteCatalogue);
+  const deleteCatalogueId = useCatalogueStore(
+    (store) => store.deleteCatalogueId
+  );
+  const isDeleting = catalogeDetails?.catalogue_id === deleteCatalogueId;
   const ImagesRendering = () => {
     if (catalogeDetails && catalogeDetails.catalogue_image) {
       return (
@@ -28,12 +38,10 @@ const CatalogueCard = ({ catalogeDetails, handleIsEditing }) => {
     } else {
       return (
         <div className="bg-gray-300 flex justify-center items-center w-full h-full">
-          <p className="text-gray-800 text-center">
-            <CommonHeading
-              headingText={"Catalogue Name"}
-              classNames={"text-center text-md"}
-            />
-          </p>
+          <CommonHeading
+            headingText={catalogeDetails?.catalogue_name || "Catalogue Name"}
+            classNames={"text-center text-md text-gray-800 text-center"}
+          />
         </div>
       );
     }
@@ -56,10 +64,6 @@ const CatalogueCard = ({ catalogeDetails, handleIsEditing }) => {
             {catalogeDetails?.product_count || 0} items added
           </span>
         </div>
-        {/* <div className="flex items-center gap-1 bg-green-50 px-2 py-1 rounded-lg">
-          <Eye className="text-green-600 w-4 h-4" />
-          <span className="text-xs font-medium text-gray-700">0 views</span>
-        </div> */}
       </div>
 
       <div className="space-y-3 p-2">
@@ -79,7 +83,7 @@ const CatalogueCard = ({ catalogeDetails, handleIsEditing }) => {
 
           {/* Edit */}
           <button
-            onClick={() => handleIsEditing(true)}
+            onClick={() => handleIsEditing(true, catalogeDetails)}
             className="cursor-pointer flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-600 text-white text-sm px-4 py-3 rounded-xl font-medium shadow-sm hover:shadow-md transition"
           >
             <Pencil className="w-4 h-4" />
@@ -87,9 +91,13 @@ const CatalogueCard = ({ catalogeDetails, handleIsEditing }) => {
           </button>
 
           {/* Share */}
-          <button className="cursor-pointer flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white text-sm px-4 py-3 rounded-xl font-medium shadow-sm hover:shadow-md transition">
+          <button
+            onClick={() => handleDeleteCatalogue(catalogeDetails?.catalogue_id)}
+            disabled={isDeleting}
+            className="cursor-pointer flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white text-sm px-4 py-3 rounded-xl font-medium shadow-sm hover:shadow-md transition"
+          >
             <Trash2 className="w-4 h-4" />
-            Delete
+            {isDeleting ? "Deleting..." : "Delete"}
           </button>
         </div>
 

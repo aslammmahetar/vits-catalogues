@@ -4,11 +4,11 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware"
 import { useUiStore } from "./useUiStore";
 
-export const useAuthStore = create(persist((set) => ({
+export const useAuthStore = create(persist((set, get) => ({
     user: null,
     token: null,
     loading: null,
-
+    authenticated: null,
     signin: async (reqbody) => {
         set({ loading: true })
         const signin = await AuthServices(enAuthReqType.signin, "", reqbody, "")
@@ -33,10 +33,11 @@ export const useAuthStore = create(persist((set) => ({
     signout: async () => {
         set({ loading: true })
         const signout = await AuthServices(enAuthReqType.signout, "", "", "")
-        set({ user: null, token: null, loading: null, })
+        set({ user: null, token: null, loading: null, authenticated: false })
         set({ loading: false })
         return { status: signout.status, message: signout.message }
     },
+
     me: async (params) => {
         useUiStore.getState().showLoader()
         const me = await AuthServices(enAuthReqType.me, params, "", "")
@@ -46,7 +47,56 @@ export const useAuthStore = create(persist((set) => ({
             return { status: "fail", message: me.message, }
         }
         return { status: me.status, message: me.message }
+    },
+
+    bootstrap: async (params) => {
+        try {
+            useUiStore.getState().showLoader()
+
+            // 🔒 Already authenticated → skip API
+            if (get().authenticated) {
+                return {
+                    status: "success",
+                    message: "Already authenticated",
+                    skipped: true,
+                }
+            }
+
+            const bootstrap = await AuthServices(
+                enAuthReqType.bootstrap,
+                params,
+                "",
+                ""
+            )
+
+            if (bootstrap?.code === "ERR_NETWORK") {
+                return {
+                    status: "fail",
+                    message: bootstrap.message,
+                }
+            }
+
+            if (bootstrap.status === "success") {
+                set({ authenticated: true })
+            }
+
+            return {
+                status: bootstrap.status,
+                message: bootstrap.message,
+                skipped: false,
+            }
+        } catch (error) {
+            console.error(error)
+            return {
+                status: "fail",
+                message: "Error occurred",
+                error,
+            }
+        } finally {
+            useUiStore.getState().hideLoader()
+        }
     }
+
 }), {
     name: "auth-store"
 }))

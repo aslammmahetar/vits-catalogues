@@ -16,35 +16,71 @@ import {
   Settings,
   User,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { toast } from "react-hot-toast";
+import { useUsersStatsStore } from "@/store/useUserStatsStore";
+
 export const dynamic = "force-dynamic";
 const Rootlayout = ({ children }) => {
+  const { slug } = useParams();
+  const router = useRouter();
   const user = useAuthStore((store) => store.user);
-  const slug = user?.slug;
+  const getUserStats = useUsersStatsStore((store) => store.getUserStats);
   const id = user?.id;
+  const bootstrap = useAuthStore((store) => store.bootstrap);
   const globalLoading = useUiStore((store) => store.globalLoading);
   const loadingText = useUiStore((store) => store.loadingText);
-  const me = useAuthStore((store) => store.me);
-  const hasFetched = useRef(false);
-  const router = useRouter();
-  // const getUser = async () => {
-  //   const query = `owner_id=${id}&slug=${slug}`;
-  //   console.log(query);
-  //   const res = await me(query);
-  //   if (res.status === "fail") {
-  //     toast.error(res.message || "Error Occured");
-  //     router.push("/");
-  //   } else {
-  //     toast.success(res.message);
-  //   }
-  // };
-  // useEffect(() => {
-  //   if (hasFetched.current) return;
-  //   hasFetched.current = true;
-  //   getUser();
-  // }, []);
+  const bootstrapRef = useRef(false);
+  const statsRef = useRef(false);
+  const getUserLatestStats = async () => {
+    const toastId = toast.loading("Getting latest stats, please wait...");
+    try {
+      const res = await getUserStats(id);
+      console.log(res);
+      toast.dismiss(toastId);
+      if (res.status === "fail" || res.status === "error") {
+        toast.error(res.message);
+      } else {
+        toast.success(res.message);
+      }
+    } catch (err) {
+      toast.dismiss(toastId);
+      console.log(err);
+      toast.error("Failed to fetch latest stats");
+    }
+  };
+
+  useEffect(() => {
+    if (!slug) return;
+    if (!bootstrapRef.current) {
+      bootstrapRef.current = true;
+
+      (async () => {
+        const resp = await bootstrap(slug);
+
+        if (!resp) return;
+
+        if (resp.status === "fail") {
+          toast.error(resp.message || "Error Occured");
+          router.push("/");
+          return;
+        }
+
+        if (!resp.skipped) {
+          toast.success(resp.message || "Welcome to Dashboard");
+        }
+      })();
+    }
+
+    if (id && !statsRef.current) {
+      statsRef.current = true;
+      setTimeout(() => {
+        getUserLatestStats();
+      }, 2000);
+    }
+  }, [slug, id]);
+
   const adminMenu = [
     {
       title: "Dashboard",
@@ -87,9 +123,10 @@ const Rootlayout = ({ children }) => {
       path: `/${slug}/admin/profile`,
     },
   ];
+
   {
     if (globalLoading) {
-      // return <GlobalLoader show={globalLoading} loadingText={loadingText} />;
+      return <GlobalLoader show={globalLoading} loadingText={loadingText} />;
     } else {
       return (
         <div className="flex h-screen overflow-hidden">
@@ -106,7 +143,7 @@ const Rootlayout = ({ children }) => {
             </div>
           </div>
           <BottomBar />
-          {/* <GlobalLoader show={globalLoading} loadingText={loadingText} /> */}
+          <GlobalLoader show={globalLoading} loadingText={loadingText} />
         </div>
       );
     }
